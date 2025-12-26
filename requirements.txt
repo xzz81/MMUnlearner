@@ -1,0 +1,25 @@
+# PyTorch (需要根据CUDA版本安装，这里使用pip安装)
+torch>=2.0.0
+torchvision>=0.15.0
+
+# HuggingFace 生态
+transformers>=4.40.0
+datasets>=2.18.0
+accelerate>=0.27.0
+peft>=0.10.0
+huggingface-hub>=0.21.0
+
+# Qwen2-VL 支持
+qwen-vl-utils>=0.0.8
+
+# 数据处理
+pandas>=2.0.0
+numpy>=1.24.0
+Pillow>=10.0.0
+
+# 工具
+tqdm>=4.65.0
+scipy>=1.10.0
+
+# 可选：Flash Attention 2 (需要单独安装)
+# flash-attn>=2.5.0

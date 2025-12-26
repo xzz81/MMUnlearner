@@ -5,7 +5,7 @@ import time
 
 import torch 
 import torch.nn as nn
-from transformers import AdamW
+from torch.optim import AdamW
 from tqdm import tqdm
 # import utils
 # from .unlearn_method import UnlearnMethod

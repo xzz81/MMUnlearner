@@ -12,7 +12,8 @@ import torch
 import json
 import argparse
 import torch
-from transformers import LlavaForConditionalGeneration, AutoProcessor, get_scheduler, AdamW, MllamaForConditionalGeneration, AutoTokenizer,Qwen2VLForConditionalGeneration,BitsAndBytesConfig
+from transformers import LlavaForConditionalGeneration, AutoProcessor, get_scheduler, MllamaForConditionalGeneration, AutoTokenizer,Qwen2VLForConditionalGeneration,BitsAndBytesConfig
+from torch.optim import AdamW
 from qwen_vl_utils import process_vision_info
 from peft import LoraConfig, prepare_model_for_kbit_training, get_peft_model
 from data_process.data_preprocess import LLAVA_multimodal_Dataset, train_collate_fn_mllmu, train_collate_mllmu_ansonly,Vanilla_LLaVA_Dataset
@@ -98,12 +99,12 @@ def load_model_and_processor(args):
         processor.tokenizer.padding_side = "right"  # Ensure right padding
     elif "qwen" in args.model_id.lower():
         model = Qwen2VLForConditionalGeneration.from_pretrained(
-            args.vanilla_dir, 
-            device_map="auto", 
-            torch_dtype=torch.bfloat16, 
-            low_cpu_mem_usage=True, 
+            args.vanilla_dir,
+            device_map="auto",
+            torch_dtype=torch.bfloat16,
+            low_cpu_mem_usage=True,
             local_files_only=True,
-            attn_implementation="flash_attention_2",
+            # # attn_implementation="flash_attention_2",  # 需要安装 flash-attn  # 需要安装 flash-attn
         )
         # LoRA configuration
         lora_config = LoraConfig(

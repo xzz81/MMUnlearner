@@ -13,7 +13,8 @@ import os
 import json
 import argparse
 import torch
-from transformers import LlavaForConditionalGeneration, AutoProcessor, get_scheduler, AdamW, MllamaForConditionalGeneration,Qwen2VLForConditionalGeneration
+from transformers import LlavaForConditionalGeneration, AutoProcessor, get_scheduler,
+from torch.optim import AdamW  # MllamaForConditionalGeneration,Qwen2VLForConditionalGeneration
 import json
 from data_process.CLEAR_process import CLEAR_Dataset, CAPTION_MODE, RECOGNITION_MODE, train_collate_clear, NONE_MODE,train_collate_clear_ansonly
 from data_process.CLEAR_process import train_collate_clear
@@ -57,7 +58,7 @@ def load_model_and_processor(args):
             torch_dtype=torch.bfloat16, 
             low_cpu_mem_usage=True, 
             local_files_only=True,
-            attn_implementation="flash_attention_2",
+            # attn_implementation="flash_attention_2",  # 需要安装 flash-attn
         )
         processor = AutoProcessor.from_pretrained(args.model_id)
         processor.tokenizer.padding_side = "right"  # Ensure right padding

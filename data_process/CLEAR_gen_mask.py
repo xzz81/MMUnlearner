@@ -24,7 +24,7 @@ model = Qwen2VLForConditionalGeneration.from_pretrained(
             device_map="auto",
             low_cpu_mem_usage=True, 
             local_files_only=True,
-            attn_implementation="flash_attention_2",
+            # attn_implementation="flash_attention_2",  # 需要安装 flash-attn
         )
 processor = AutoProcessor.from_pretrained(model_id)
 # Additional processor configuration if necessary

@@ -50,15 +50,28 @@ class LLAVA_multimodal_Dataset(Dataset):
                 print(f"Error loading image at index {idx}: {e}")
                 continue
 
-            # Safely load metadata as JSON
-            try:
-                metadata = json.loads(row['metadata'])  # Using json.loads to parse JSON safely
-            except json.JSONDecodeError as e:
-                print(f"Error decoding metadata at index {idx}: {e}")
-                continue
-            for qa_pair in metadata:
-                question = qa_pair.get("Question", "")
-                answer = qa_pair.get("Answer", "")
+            # Check if new format (direct question/answer columns) or old format (metadata column)
+            if 'metadata' in row.index:
+                # Old format: parse metadata JSON
+                try:
+                    metadata = json.loads(row['metadata'])  # Using json.loads to parse JSON safely
+                except json.JSONDecodeError as e:
+                    print(f"Error decoding metadata at index {idx}: {e}")
+                    continue
+                for qa_pair in metadata:
+                    question = qa_pair.get("Question", "")
+                    answer = qa_pair.get("Answer", "")
+
+                    if question and answer:
+                        flattened_data.append({
+                            "image": image,
+                            "question": question,
+                            "answer": answer
+                        })
+            else:
+                # New format: direct question and answer columns
+                question = row.get('question', "")
+                answer = row.get('answer', "")
 
                 if question and answer:
                     flattened_data.append({
@@ -294,15 +307,28 @@ class Vanilla_LLaVA_Dataset(Dataset):
                 print(f"Error loading image at index {idx}: {e}")
                 continue
 
-            # Safely load metadata as JSON
-            try:
-                metadata = json.loads(row['metadata'])  # Using json.loads to parse JSON safely
-            except json.JSONDecodeError as e:
-                print(f"Error decoding metadata at index {idx}: {e}")
-                continue
-            for qa_pair in metadata:
-                question = qa_pair.get("Question", "")
-                answer = qa_pair.get("Answer", "")
+            # Check if new format (direct question/answer columns) or old format (metadata column)
+            if 'metadata' in row.index:
+                # Old format: parse metadata JSON
+                try:
+                    metadata = json.loads(row['metadata'])  # Using json.loads to parse JSON safely
+                except json.JSONDecodeError as e:
+                    print(f"Error decoding metadata at index {idx}: {e}")
+                    continue
+                for qa_pair in metadata:
+                    question = qa_pair.get("Question", "")
+                    answer = qa_pair.get("Answer", "")
+
+                    if question and answer:
+                        flattened_data.append({
+                            "image": image,
+                            "question": question,
+                            "answer": answer
+                        })
+            else:
+                # New format: direct question and answer columns
+                question = row.get('question', "")
+                answer = row.get('answer', "")
 
                 if question and answer:
                     flattened_data.append({

@@ -11,7 +11,8 @@ import os
 import json
 import argparse
 import torch
-from transformers import LlavaForConditionalGeneration, AutoProcessor, get_scheduler, AdamW, AutoTokenizer,MllamaForConditionalGeneration,Qwen2VLForConditionalGeneration
+from transformers import LlavaForConditionalGeneration, AutoProcessor, get_scheduler,
+from torch.optim import AdamW  # AutoTokenizer,MllamaForConditionalGeneration,Qwen2VLForConditionalGeneration
 from peft import LoraConfig, prepare_model_for_kbit_training, get_peft_model
 import json
 from data_process.CLEAR_process import CLEAR_Dataset, CAPTION_MODE, RECOGNITION_MODE, train_collate_clear, NONE_MODE
@@ -101,7 +102,7 @@ def load_model_and_processor(args):
             torch_dtype=torch.bfloat16, 
             low_cpu_mem_usage=True, 
             local_files_only=True,
-            attn_implementation="flash_attention_2",
+            # attn_implementation="flash_attention_2",  # 需要安装 flash-attn
         )
         # LoRA configuration
         lora_config = LoraConfig(

@@ -4,7 +4,8 @@ import random
 from PIL import Image
 from tqdm import tqdm
 import torch
-from transformers import LlavaForConditionalGeneration, AutoProcessor, get_scheduler, AdamW, MllamaForConditionalGeneration, AutoTokenizer,Qwen2VLForConditionalGeneration
+from transformers import LlavaForConditionalGeneration, AutoProcessor, get_scheduler,
+from torch.optim import AdamW  # MllamaForConditionalGeneration, AutoTokenizer,Qwen2VLForConditionalGeneration
 import pandas as pd
 from io import BytesIO
 # from transformers import LlavaForConditionalGeneration, AutoProcessor, AutoTokenizer, Idefics2ForConditionalGeneration, MllamaProcessor, MllamaForConditionalGeneration
@@ -774,7 +775,7 @@ def main():
                 torch_dtype=torch.bfloat16, 
                 low_cpu_mem_usage=True, 
                 local_files_only=True,
-                attn_implementation="flash_attention_2",
+                # attn_implementation="flash_attention_2",  # 需要安装 flash-attn
             )
     else:
         if "llava" in args.model_id.lower():
@@ -803,7 +804,7 @@ def main():
                 torch_dtype=torch.bfloat16, 
                 low_cpu_mem_usage=True, 
                 local_files_only=True,
-                attn_implementation="flash_attention_2",
+                # attn_implementation="flash_attention_2",  # 需要安装 flash-attn
             )
 
 
