@@ -5,7 +5,7 @@ from PIL import Image
 from pydantic_core import validate_core_schema
 from tqdm import tqdm
 import torch
-from transformers import LlavaForConditionalGeneration, AutoProcessor, AutoTokenizer, MllamaForConditionalGeneration,Qwen2VLForConditionalGeneration
+from transformers import LlavaForConditionalGeneration, AutoProcessor, AutoTokenizer, MllamaForConditionalGeneration,Qwen2VLForConditionalGeneration,Qwen3VLForConditionalGeneration
 import pandas as pd
 from io import BytesIO
 from rouge_score import rouge_scorer
@@ -297,6 +297,15 @@ def main():
             device_map="auto",
             low_cpu_mem_usage=True,
             local_files_only=True
+        )
+    elif "qwen3" in args.model_id.lower():
+        print("Loading Qwen3 model...")
+        model = Qwen3VLForConditionalGeneration.from_pretrained(
+            args.cache_path,
+            device_map="auto",
+            torch_dtype=torch.bfloat16,
+            low_cpu_mem_usage=True,
+            local_files_only=True,
         )
     elif "qwen" in args.model_id.lower():
         print("Loading Qwen model...")

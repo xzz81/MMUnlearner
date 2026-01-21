@@ -4,8 +4,16 @@ import random
 from PIL import Image
 from tqdm import tqdm
 import torch
-from transformers import LlavaForConditionalGeneration, AutoProcessor, get_scheduler,
-from torch.optim import AdamW  # MllamaForConditionalGeneration, AutoTokenizer,Qwen2VLForConditionalGeneration
+from transformers import (
+    LlavaForConditionalGeneration,
+    AutoProcessor,
+    get_scheduler,
+    AutoTokenizer,
+    MllamaForConditionalGeneration,
+    Qwen2VLForConditionalGeneration,
+    Qwen3VLForConditionalGeneration,
+)
+from torch.optim import AdamW
 import pandas as pd
 from io import BytesIO
 # from transformers import LlavaForConditionalGeneration, AutoProcessor, AutoTokenizer, Idefics2ForConditionalGeneration, MllamaProcessor, MllamaForConditionalGeneration
@@ -767,13 +775,22 @@ def main():
                 # quantization_config=bnb_config,
                 low_cpu_mem_usage=True,
             )
+        elif "qwen3" in args.model_id.lower():
+            print("Loading Qwen3 Pretrained model...")
+            model = Qwen3VLForConditionalGeneration.from_pretrained(
+                args.model_id,
+                device_map="auto",
+                torch_dtype=torch.bfloat16,
+                low_cpu_mem_usage=True,
+                local_files_only=True,
+            )
         elif "qwen" in args.model_id.lower():
             print("Loading Qwen Pretrained model...")
             model = Qwen2VLForConditionalGeneration.from_pretrained(
-                args.model_id, 
-                device_map="auto", 
-                torch_dtype=torch.bfloat16, 
-                low_cpu_mem_usage=True, 
+                args.model_id,
+                device_map="auto",
+                torch_dtype=torch.bfloat16,
+                low_cpu_mem_usage=True,
                 local_files_only=True,
                 # attn_implementation="flash_attention_2",  # 需要安装 flash-attn
             )
@@ -795,6 +812,15 @@ def main():
                 device_map="auto",
                 low_cpu_mem_usage=True,
                 local_files_only=True
+            )
+        elif "qwen3" in args.model_id.lower():
+            print("Loading Qwen3 model...")
+            model = Qwen3VLForConditionalGeneration.from_pretrained(
+                args.cache_path,
+                device_map="auto",
+                torch_dtype=torch.bfloat16,
+                low_cpu_mem_usage=True,
+                local_files_only=True,
             )
         elif "qwen" in args.model_id.lower():
             print("Loading Qwen Pretrained model...")

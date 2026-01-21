@@ -59,6 +59,9 @@ Then, move them to the following directories:
 - `data/MLLMU-Bench`  
 - `data/CLEAR`  
 
+
+
+
 ## Getting Vanilla Model  
   
 To obtain the vanilla models, use the following commands:  

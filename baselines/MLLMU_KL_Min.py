@@ -12,8 +12,8 @@ import torch
 import json
 import argparse
 import torch
-from transformers import LlavaForConditionalGeneration, AutoProcessor, get_scheduler,
-from torch.optim import AdamW  # MllamaForConditionalGeneration, AutoTokenizer,Qwen2VLForConditionalGeneration
+from transformers import LlavaForConditionalGeneration, AutoProcessor, get_scheduler, Qwen2VLForConditionalGeneration, Qwen3VLForConditionalGeneration, AutoTokenizer
+from torch.optim import AdamW
 from qwen_vl_utils import process_vision_info
 from peft import LoraConfig, prepare_model_for_kbit_training, get_peft_model
 from data_process.data_preprocess import LLAVA_multimodal_Dataset, train_collate_fn_mllmu, train_collate_mllmu_ansonly,Vanilla_LLaVA_Dataset
@@ -102,6 +102,26 @@ def load_model_and_processor(args):
 
         processor = AutoProcessor.from_pretrained(args.model_id)
         processor.tokenizer.padding_side = "right"  # Ensure right padding
+    elif "qwen3" in args.model_id.lower():
+        model = Qwen3VLForConditionalGeneration.from_pretrained(
+            args.vanilla_dir,
+            device_map="auto",
+            torch_dtype=torch.bfloat16,
+            low_cpu_mem_usage=True,
+            local_files_only=True,
+        )
+        lora_config = LoraConfig(
+            r=16,
+            lora_alpha=16,
+            lora_dropout=0.05,
+            target_modules=find_all_linear_names(model),
+            init_lora_weights="gaussian",
+        )
+        print("getting peft model")
+        model = get_peft_model(model, lora_config)
+        model.print_trainable_parameters()
+        processor = AutoProcessor.from_pretrained(args.model_id)
+        processor.tokenizer.padding_side = "right"
     elif "qwen" in args.model_id.lower():
         model = Qwen2VLForConditionalGeneration.from_pretrained(
             args.vanilla_dir, 
