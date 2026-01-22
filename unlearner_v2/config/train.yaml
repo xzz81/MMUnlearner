@@ -1,0 +1,35 @@
+# 训练配置
+
+# 通用训练参数
+lr: 0.0005
+num_epochs: 1
+gradient_clip: 1.0
+ans_only: false
+save_dir: "/home/dcy/project/MMUnlearner/unlearner_v2/output"
+checkpoint_dir: "/home/dcy/project/MMUnlearner/unlearner_v2/checkpoints"
+
+# 优化器
+optimizer:
+  type: "adamw"
+  weight_decay: 0.01
+
+# 学习率调度
+scheduler:
+  type: "linear"
+  warmup_steps: 0
+
+# Finetune 特定配置
+finetune:
+  gradient_accumulation_steps: 1
+
+# Unlearn 特定配置
+unlearn:
+  # Manifold 方法
+  manifold:
+    forget_alpha: 1.0
+    grad_mask_path: null
+
+  # Merger Only 方法
+  merger_only:
+    freeze_except_merger: true
+    loss_type: "custom"  # 可扩展

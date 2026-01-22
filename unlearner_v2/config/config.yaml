@@ -1,0 +1,24 @@
+# 主配置文件 - 控制阶段开关和全局设置
+
+# 阶段开关
+finetune_phase:
+  enable: true
+
+unlearn_phase:
+  enable: false
+  method: "manifold"  # manifold, merger_only
+
+eval_phase:
+  enable: false
+
+# 输出设置
+output:
+  base_dir: "output"
+  exp_name: null  # 为空则自动生成时间戳
+
+# 运行时配置
+runtime:
+  accelerator: "auto"
+  devices: "auto"      # "auto" 自动检测所有 GPU，或指定数字如 1, 2
+  strategy: "ddp"      # DDP 策略用于多卡训练
+  precision: "bf16-mixed"

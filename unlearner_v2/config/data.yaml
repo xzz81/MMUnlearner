@@ -1,0 +1,20 @@
+# 数据配置
+
+dataset_type: "mllmu"  # mllmu, custom
+data_dir: "/home/dcy/project/MMUnlearner/data/MLLMU-Bench"
+
+# 数据输入模式
+input_mode: "raw"  # raw（原始图片）, embedding, trigger
+
+# 遗忘/保留集划分
+forget_split_ratio: 5  # 5%, 10%, 15%
+
+# 数据加载
+batch_size: 2
+num_workers: 2
+max_length: 384
+
+# 自定义数据集配置（当 dataset_type=custom 时）
+custom:
+  image_dir: "/path/to/images"
+  annotation_file: "/path/to/annotations.json"

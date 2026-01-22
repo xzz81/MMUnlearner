@@ -6,6 +6,7 @@ models/
 
 # Output files
 output/
+checkpoints/
 
 # Python cache
 __pycache__/
