@@ -33,3 +33,10 @@ unlearn:
   merger_only:
     freeze_except_merger: true
     loss_type: "custom"  # 可扩展
+    lora_r: 5
+    lora_alpha: 5
+    lamb_forget: 1.3
+    lamb_preserve: 0.4
+    lamb_weight: 1.0
+    num_epochs: 2000
+    lr: 0.01

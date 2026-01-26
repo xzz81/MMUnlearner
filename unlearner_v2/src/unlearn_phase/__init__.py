@@ -1,4 +1,10 @@
 from .manifold_module import ManifoldLightningModule
-from .run import run_unlearn
+from .merger_only_module import MergerOnlyLightningModule
+from .run import run_unlearn, run_merger_only_unlearn
 
-__all__ = ["ManifoldLightningModule", "run_unlearn"]
+__all__ = [
+    "ManifoldLightningModule",
+    "MergerOnlyLightningModule",
+    "run_unlearn",
+    "run_merger_only_unlearn",
+]

@@ -1,7 +1,7 @@
 import argparse
 from utils.config_loader import load_config
 from src.finetune_phase.run import run_finetune
-from src.unlearn_phase.run import run_unlearn
+from src.unlearn_phase.run import run_unlearn, run_merger_only_unlearn
 from src.eval_phase.run import run_eval
 
 
@@ -12,7 +12,11 @@ def main(config_dir: str):
         run_finetune(config)
 
     if config["config"]["unlearn_phase"]["enable"]:
-        run_unlearn(config)
+        unlearn_method = config["config"]["unlearn_phase"].get("method", "manifold")
+        if unlearn_method == "merger_only":
+            run_merger_only_unlearn(config)
+        else:
+            run_unlearn(config)
 
     if config["config"]["eval_phase"]["enable"]:
         run_eval(config)

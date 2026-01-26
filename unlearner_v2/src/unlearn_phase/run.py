@@ -87,3 +87,62 @@ def run_unlearn(config):
         json.dump(config, f, indent=2)
 
     print(f"Model saved to: {save_dir}")
+
+
+def run_merger_only_unlearn(config):
+    """Run merger-only unlearning with precomputed features."""
+    from .merger_only_module import MergerOnlyLightningModule
+
+    model, processor = load_model_and_processor(config)
+    data_module = MLLMUDataModule(config, processor)
+    data_module.setup()
+
+    forget_loader, retain_loader = data_module.unlearn_dataloaders()
+
+    lightning_module = MergerOnlyLightningModule(
+        model=model,
+        processor=processor,
+        config=config,
+    )
+    lightning_module.forget_dataloader = forget_loader
+    lightning_module.retain_dataloader = retain_loader
+
+    train_config = config.get("train", {})
+    merger_config = train_config.get("unlearn", {}).get("merger_only", {})
+    runtime_config = config.get("config", {}).get("runtime", {})
+
+    checkpoint_callback = ModelCheckpoint(
+        dirpath=train_config.get("checkpoint_dir", "./checkpoints"),
+        filename="merger-only-{epoch:02d}",
+        save_top_k=1,
+        monitor="train/total_loss",
+        mode="min",
+    )
+
+    trainer = pl.Trainer(
+        max_epochs=merger_config.get("num_epochs", 2000),
+        accelerator=runtime_config.get("accelerator", "auto"),
+        devices=runtime_config.get("devices", "auto"),
+        strategy=runtime_config.get("strategy", "auto"),
+        precision=runtime_config.get("precision", "bf16-mixed"),
+        callbacks=[checkpoint_callback],
+        log_every_n_steps=100,
+        enable_progress_bar=True,
+    )
+
+    trainer.fit(lightning_module)
+
+    save_dir = train_config.get("save_dir", "./output")
+    os.makedirs(save_dir, exist_ok=True)
+
+    unwrapped_model = lightning_module.model
+    if hasattr(unwrapped_model, "merge_and_unload"):
+        unwrapped_model = unwrapped_model.merge_and_unload()
+
+    unwrapped_model.save_pretrained(save_dir)
+    processor.save_pretrained(save_dir)
+
+    with open(os.path.join(save_dir, "config.json"), "w") as f:
+        json.dump(config, f, indent=2)
+
+    print(f"Model saved to: {save_dir}")
